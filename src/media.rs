@@ -5,7 +5,7 @@ use {
 };
 
 #[derive(Debug, PartialEq, Copy, Clone)]
-pub(crate) enum Media {
+pub enum Media {
   Audio,
   Iframe,
   Image,
@@ -39,7 +39,7 @@ impl Media {
     ("video/webm", Media::Video, &["webm"]),
   ];
 
-  pub(crate) fn content_type_for_path(path: &Path) -> Result<&'static str, Error> {
+  pub fn content_type_for_path(path: &Path) -> Result<&'static str, Error> {
     let extension = path
       .extension()
       .ok_or_else(|| anyhow!("file must have extension"))?
@@ -71,7 +71,7 @@ impl Media {
     ))
   }
 
-  pub(crate) fn check_mp4_codec(path: &Path) -> Result<(), Error> {
+  pub fn check_mp4_codec(path: &Path) -> Result<(), Error> {
     let f = File::open(path)?;
     let size = f.metadata()?.len();
     let reader = BufReader::new(f);

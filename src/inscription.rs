@@ -17,22 +17,22 @@ const BODY_TAG: &[u8] = &[];
 const CONTENT_TYPE_TAG: &[u8] = &[1];
 
 #[derive(Debug, PartialEq, Clone)]
-pub(crate) struct Inscription {
+pub struct Inscription {
   body: Option<Vec<u8>>,
   content_type: Option<Vec<u8>>,
 }
 
 impl Inscription {
   #[cfg(test)]
-  pub(crate) fn new(content_type: Option<Vec<u8>>, body: Option<Vec<u8>>) -> Self {
+  pub fn new(content_type: Option<Vec<u8>>, body: Option<Vec<u8>>) -> Self {
     Self { content_type, body }
   }
 
-  pub(crate) fn from_transaction(tx: &Transaction) -> Option<Inscription> {
+  pub fn from_transaction(tx: &Transaction) -> Option<Inscription> {
     InscriptionParser::parse(&tx.input.get(0)?.witness).ok()
   }
 
-  pub(crate) fn from_file(chain: Chain, path: impl AsRef<Path>) -> Result<Self, Error> {
+  pub fn from_file(chain: Chain, path: impl AsRef<Path>) -> Result<Self, Error> {
     let path = path.as_ref();
 
     let body = fs::read(path).with_context(|| format!("io error reading {}", path.display()))?;
@@ -74,11 +74,11 @@ impl Inscription {
     builder.push_opcode(opcodes::all::OP_ENDIF)
   }
 
-  pub(crate) fn append_reveal_script(&self, builder: script::Builder) -> Script {
+  pub fn append_reveal_script(&self, builder: script::Builder) -> Script {
     self.append_reveal_script_to_builder(builder).into_script()
   }
 
-  pub(crate) fn media(&self) -> Media {
+  pub fn media(&self) -> Media {
     if self.body.is_none() {
       return Media::Unknown;
     }
@@ -90,24 +90,24 @@ impl Inscription {
     content_type.parse().unwrap_or(Media::Unknown)
   }
 
-  pub(crate) fn body(&self) -> Option<&[u8]> {
+  pub fn body(&self) -> Option<&[u8]> {
     Some(self.body.as_ref()?)
   }
 
-  pub(crate) fn into_body(self) -> Option<Vec<u8>> {
+  pub fn into_body(self) -> Option<Vec<u8>> {
     self.body
   }
 
-  pub(crate) fn content_length(&self) -> Option<usize> {
+  pub fn content_length(&self) -> Option<usize> {
     Some(self.body()?.len())
   }
 
-  pub(crate) fn content_type(&self) -> Option<&str> {
+  pub fn content_type(&self) -> Option<&str> {
     str::from_utf8(self.content_type.as_ref()?).ok()
   }
 
   #[cfg(test)]
-  pub(crate) fn to_witness(&self) -> Witness {
+  pub fn to_witness(&self) -> Witness {
     let builder = script::Builder::new();
 
     let script = self.append_reveal_script(builder);
