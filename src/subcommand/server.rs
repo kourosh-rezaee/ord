@@ -88,7 +88,7 @@ impl Display for StaticHtml {
 }
 
 #[derive(Debug, Parser)]
-pub(crate) struct Server {
+pub struct Server {
   #[clap(
     long,
     default_value = "0.0.0.0",
@@ -124,7 +124,7 @@ pub(crate) struct Server {
 }
 
 impl Server {
-  pub(crate) fn run(self, options: Options, index: Arc<Index>, handle: Handle) -> Result {
+  pub fn run(self, options: Options, index: Arc<Index>, handle: Handle) -> Result {
     Runtime::new()?.block_on(async {
       let clone = index.clone();
       thread::spawn(move || loop {
