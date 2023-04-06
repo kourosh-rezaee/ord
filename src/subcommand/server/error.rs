@@ -1,12 +1,12 @@
 use super::*;
 
-pub(super) enum ServerError {
+pub enum ServerError {
   Internal(Error),
   BadRequest(String),
   NotFound(String),
 }
 
-pub(super) type ServerResult<T> = Result<T, ServerError>;
+pub type ServerResult<T> = Result<T, ServerError>;
 
 impl IntoResponse for ServerError {
   fn into_response(self) -> Response {
@@ -27,7 +27,7 @@ impl IntoResponse for ServerError {
   }
 }
 
-pub(super) trait OptionExt<T> {
+pub trait OptionExt<T> {
   fn ok_or_not_found<F: FnOnce() -> S, S: Into<String>>(self, f: F) -> ServerResult<T>;
 }
 
